@@ -5,7 +5,7 @@ import inspect
 from typing import Any, Optional
 
 
-def _importar_modulo(module_nombre: str) -> Optional[Any]:
+def _import_module(module_nombre: str) -> Optional[Any]:
     try:
         return importlib.import_module(module_nombre)
     except Exception:
@@ -60,7 +60,7 @@ def _serialize(value: Any) -> Any:
     return str(value)
 
 
-def _llamar_repo(repo: Any, resource_singular: str, accion: str, *args: Any) -> Any:
+def _call_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
     if repo is None:
         raise RuntimeError("Repositorio no disponible")
 
@@ -72,15 +72,15 @@ def _llamar_repo(repo: Any, resource_singular: str, accion: str, *args: Any) -> 
         "delete": repo.eliminar,
     }
 
-    metodo = metodos[action]
+    metodo = metodos[accion]
 
-    if action == "list":
+    if accion == "list":
         return metodo(tabla)
     return metodo(tabla,args)
 
 
 def _build_order_from_payload(payload: dict[str, Any]) -> Any:
-    domain_module = _get_modulo_domain()
+    domain_module = _get_domain_module()
     if domain_module is None:
         raise RuntimeError("No se pudo cargar el módulo de dominio")
 
