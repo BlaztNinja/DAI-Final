@@ -50,7 +50,7 @@ def _get_repository() -> Optional[Any]:
 
 
 def _get_domain_module() -> Optional[Any]:
-    for module_name in ("src.domain.entities.entities", "src.domain.entities"):
+    for module_name in ("src.dominio.entities.entities", "src.dominio.entities"):
         module = _import_module(module_name)
         if module is not None and hasattr(module, "OrdenServicio"):
             return module
@@ -58,7 +58,7 @@ def _get_domain_module() -> Optional[Any]:
 
 
 def _get_value_objects_module() -> Optional[Any]:
-    for module_name in ("src.domain.value_objects.value_objects", "src.domain.value_objects"):
+    for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
         module = _import_module(module_name)
         if module is not None:
             return module
