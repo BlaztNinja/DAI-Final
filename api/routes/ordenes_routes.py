@@ -10,7 +10,6 @@ from api.dependencies import (
     _get_repository,
     _guardar_domain_object,
     _serialize,
-    _llamar_repo,
 )
 
 ordenes_bp = Blueprint("ordenes", __name__)

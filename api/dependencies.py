@@ -5,9 +5,9 @@ import inspect
 from typing import Any, Optional
 
 
-def _import_module(module_nombre: str) -> Optional[Any]:
+def _import_module(module_name: str) -> Optional[Any]:
     try:
-        return importlib.import_module(module_nombre)
+        return importlib.import_module(module_name)
     except Exception:
         return None
 
@@ -26,10 +26,6 @@ def _get_domain_module() -> Optional[Any]:
 
 
 def _get_value_objects_module() -> Optional[Any]:
-    for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
-        module = _import_module(module_name)
-        if module is not None:
-            return module
     for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
         module = _import_module(module_name)
         if module is not None:
@@ -76,7 +72,11 @@ def _call_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
 
     if accion == "list":
         return metodo(tabla)
-    return metodo(tabla,args)
+    return metodo(tabla, args)
+
+
+def _llamar_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
+    return _call_repo(repo, tabla, accion, *args)
 
 
 def _build_order_from_payload(payload: dict[str, Any]) -> Any:
