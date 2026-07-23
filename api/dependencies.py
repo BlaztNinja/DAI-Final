@@ -49,29 +49,19 @@ def _get_repository() -> Optional[Any]:
     return None
 
 
-<<<<<<< HEAD
-def _get_modulo_domain() -> Optional[Any]:
-    for module_nombre in ("src.domain.entities.entities", "src.domain.entities"):
-        modulo = _importar_modulo(module_nombre)
-        if modulo is not None and hasattr(modulo, "OrdenServicio"):
-            return modulo
-=======
 def _get_domain_module() -> Optional[Any]:
     for module_name in ("src.dominio.entities.entities", "src.dominio.entities"):
         module = _import_module(module_name)
         if module is not None and hasattr(module, "OrdenServicio"):
             return module
->>>>>>> 963d201fd0b2d6cf6bab241539147f03f53079d8
     return None
 
 
 def _get_value_objects_module() -> Optional[Any]:
-<<<<<<< HEAD
-    for module_nombre in ("src.domain.value_objects.value_objects", "src.domain.value_objects"):
-        modulo = _importar_modulo(module_nombre)
-        if modulo is not None:
-            return modulo
-=======
+    for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
+        module = _import_module(module_name)
+        if module is not None:
+            return module
     for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
         module = _import_module(module_name)
         if module is not None:
