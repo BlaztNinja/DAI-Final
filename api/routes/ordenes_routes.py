@@ -4,11 +4,13 @@ from flask import Blueprint, jsonify, request
 
 from api.dependencies import (
     _build_order_from_payload,
+    _call_repo,
     _coerce_service_payload,
-    _get_order_from_repo,
+    _get_orden_de_repo,
     _get_repository,
-    _save_domain_object,
+    _guardar_domain_object,
     _serialize,
+    _llamar_repo,
 )
 
 ordenes_bp = Blueprint("ordenes", __name__)
@@ -22,12 +24,12 @@ def ordenes_servicio_collection():
 
     try:
         if request.method == "GET":
-            data = _call_repo(repo, "orden_servicio", "list")
+            data = _llamar_repo(repo, "orden_servicio", "list")
             return jsonify(_serialize(data)), 200
 
         payload = request.get_json(silent=True) or {}
         orden = _build_order_from_payload(payload)
-        saved = _save_domain_object(repo, orden)
+        saved = _guardar_domain_object(repo, orden)
         return jsonify(_serialize(saved)), 201
 
     except Exception as exc:
@@ -41,7 +43,7 @@ def orden_servicio_detail(resource_id):
         return jsonify({"error": "Repositorio no disponible"}), 503
 
     try:
-        orden = _get_order_from_repo(repo, resource_id)
+        orden = _get_orden_de_repo(repo, resource_id)
         if orden is None:
             return jsonify({"error": "Orden no encontrada"}), 404
         return jsonify(_serialize(orden)), 200
@@ -57,7 +59,7 @@ def cargar_servicios(resource_id):
         return jsonify({"error": "Repositorio no disponible"}), 503
 
     try:
-        orden = _get_order_from_repo(repo, resource_id)
+        orden = _get_orden_de_repo(repo, resource_id)
         if orden is None:
             return jsonify({"error": "Orden no encontrada"}), 404
 
@@ -74,7 +76,7 @@ def cargar_servicios(resource_id):
         if hasattr(orden, "revisar_y_aplicar_restriccion"):
             orden.revisar_y_aplicar_restriccion(orden)
 
-        saved = _save_domain_object(repo, orden)
+        saved = _guardar_domain_object(repo, orden)
         return jsonify(_serialize(saved)), 200
 
     except Exception as exc:
@@ -88,7 +90,7 @@ def generar_factura(resource_id):
         return jsonify({"error": "Repositorio no disponible"}), 503
 
     try:
-        orden = _get_order_from_repo(repo, resource_id)
+        orden = _get_orden_de_repo(repo, resource_id)
         if orden is None:
             return jsonify({"error": "Orden no encontrada"}), 404
 
@@ -97,7 +99,7 @@ def generar_factura(resource_id):
             raise RuntimeError("La orden no expone generarOrden()")
 
         method()
-        saved = _save_domain_object(repo, orden)
+        saved = _guardar_domain_object(repo, orden)
         return jsonify(_serialize(saved)), 200
 
     except Exception as exc:
@@ -111,7 +113,7 @@ def procesar_pago(resource_id):
         return jsonify({"error": "Repositorio no disponible"}), 503
 
     try:
-        orden = _get_order_from_repo(repo, resource_id)
+        orden = _get_orden_de_repo(repo, resource_id)
         if orden is None:
             return jsonify({"error": "Orden no encontrada"}), 404
 
@@ -120,7 +122,7 @@ def procesar_pago(resource_id):
             raise RuntimeError("La orden no expone procesarPago()")
 
         method()
-        saved = _save_domain_object(repo, orden)
+        saved = _guardar_domain_object(repo, orden)
         return jsonify(_serialize(saved)), 200
 
     except Exception as exc:

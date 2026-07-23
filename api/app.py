@@ -13,7 +13,7 @@ from api.routes.crud_routes import crud_bp
 from api.routes.ordenes_routes import ordenes_bp
 
 
-def create_app() -> Flask:
+def crear_app() -> Flask:
     app = Flask(__name__)
     app.config["JSON_SORT_KEYS"] = False
 
@@ -23,7 +23,7 @@ def create_app() -> Flask:
     return app
 
 
-app = create_app()
+app = crear_app()
 
 
 if __name__ == "__main__":

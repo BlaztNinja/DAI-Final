@@ -5,9 +5,9 @@ import inspect
 from typing import Any, Optional
 
 
-def _import_module(module_name: str) -> Optional[Any]:
+def _importar_modulo(module_nombre: str) -> Optional[Any]:
     try:
-        return importlib.import_module(module_name)
+        return importlib.import_module(module_nombre)
     except Exception:
         return None
 
@@ -20,26 +20,26 @@ def _get_repository() -> Optional[Any]:
         "repositorio",
     ]
 
-    for module_name in candidates:
-        module = _import_module(module_name)
-        if module is None:
+    for module_nombre in candidates:
+        modulo = _importar_modulo(module_nombre)
+        if modulo is None:
             continue
 
-        for class_name in (
+        for nombre_clase in (
             "Repositorio",
             "Repository",
             "RepositorioSQLite",
             "SQLiteRepositorio",
             "RepositorioSQL",
         ):
-            cls = getattr(module, class_name, None)
+            cls = getattr(modulo, nombre_clase, None)
             if inspect.isclass(cls):
                 try:
                     return cls()
                 except TypeError:
                     return cls
 
-        factory = getattr(module, "crear_repositorio", None)
+        factory = getattr(modulo, "crear_repositorio", None)
         if callable(factory):
             try:
                 return factory()
@@ -49,19 +49,34 @@ def _get_repository() -> Optional[Any]:
     return None
 
 
+<<<<<<< HEAD
+def _get_modulo_domain() -> Optional[Any]:
+    for module_nombre in ("src.domain.entities.entities", "src.domain.entities"):
+        modulo = _importar_modulo(module_nombre)
+        if modulo is not None and hasattr(modulo, "OrdenServicio"):
+            return modulo
+=======
 def _get_domain_module() -> Optional[Any]:
-    for module_name in ("src.domain.entities.entities", "src.domain.entities"):
+    for module_name in ("src.dominio.entities.entities", "src.dominio.entities"):
         module = _import_module(module_name)
         if module is not None and hasattr(module, "OrdenServicio"):
             return module
+>>>>>>> 963d201fd0b2d6cf6bab241539147f03f53079d8
     return None
 
 
 def _get_value_objects_module() -> Optional[Any]:
-    for module_name in ("src.domain.value_objects.value_objects", "src.domain.value_objects"):
+<<<<<<< HEAD
+    for module_nombre in ("src.domain.value_objects.value_objects", "src.domain.value_objects"):
+        modulo = _importar_modulo(module_nombre)
+        if modulo is not None:
+            return modulo
+=======
+    for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
         module = _import_module(module_name)
         if module is not None:
             return module
+>>>>>>> 963d201fd0b2d6cf6bab241539147f03f53079d8
     return None
 
 
@@ -88,20 +103,20 @@ def _serialize(value: Any) -> Any:
     return str(value)
 
 
-def _call_repo(repo: Any, resource_singular: str, action: str, *args: Any) -> Any:
+def _llamar_repo(repo: Any, resource_singular: str, accion: str, *args: Any) -> Any:
     if repo is None:
         raise RuntimeError("Repositorio no disponible")
 
     candidates: list[str] = []
 
-    if action == "list":
+    if accion == "list":
         candidates = [
             f"listar_{resource_singular}",
             f"listar_{resource_singular}s",
             "listar",
             "list",
         ]
-    elif action == "get":
+    elif accion == "get":
         candidates = [
             f"obtener_{resource_singular}",
             f"leer_{resource_singular}",
@@ -109,7 +124,7 @@ def _call_repo(repo: Any, resource_singular: str, action: str, *args: Any) -> An
             "obtener",
             "get",
         ]
-    elif action == "create":
+    elif accion == "create":
         candidates = [
             f"crear_{resource_singular}",
             f"guardar_{resource_singular}",
@@ -117,7 +132,7 @@ def _call_repo(repo: Any, resource_singular: str, action: str, *args: Any) -> An
             "guardar",
             "create",
         ]
-    elif action == "update":
+    elif accion == "update":
         candidates = [
             f"actualizar_{resource_singular}",
             f"editar_{resource_singular}",
@@ -127,7 +142,7 @@ def _call_repo(repo: Any, resource_singular: str, action: str, *args: Any) -> An
             "guardar",
             "update",
         ]
-    elif action == "delete":
+    elif accion == "delete":
         candidates = [
             f"eliminar_{resource_singular}",
             f"borrar_{resource_singular}",
@@ -141,35 +156,35 @@ def _call_repo(repo: Any, resource_singular: str, action: str, *args: Any) -> An
         method = getattr(repo, name, None)
         if callable(method):
             try:
-                if action == "list":
+                if accion == "list":
                     return method()
-                if action == "get":
+                if accion == "get":
                     return method(*args)
-                if action == "create":
+                if accion == "create":
                     return method(*args)
-                if action == "update":
+                if accion == "update":
                     return method(*args)
-                if action == "delete":
+                if accion == "delete":
                     return method(*args)
             except TypeError:
                 continue
 
-    if action == "list" and hasattr(repo, "listar"):
+    if accion == "list" and hasattr(repo, "listar"):
         return repo.listar()
-    if action == "get" and hasattr(repo, "obtener"):
+    if accion == "get" and hasattr(repo, "obtener"):
         return repo.obtener(*args)
-    if action == "create" and hasattr(repo, "guardar"):
+    if accion == "create" and hasattr(repo, "guardar"):
         return repo.guardar(*args)
-    if action == "update" and hasattr(repo, "guardar"):
+    if accion == "update" and hasattr(repo, "guardar"):
         return repo.guardar(*args)
-    if action == "delete" and hasattr(repo, "eliminar"):
+    if accion == "delete" and hasattr(repo, "eliminar"):
         return repo.eliminar(*args)
 
-    raise RuntimeError(f"No existe un método de repositorio para {action} ({resource_singular})")
+    raise RuntimeError(f"No existe un método de repositorio para {accion} ({resource_singular})")
 
 
 def _build_order_from_payload(payload: dict[str, Any]) -> Any:
-    domain_module = _get_domain_module()
+    domain_module = _get_modulo_domain()
     if domain_module is None:
         raise RuntimeError("No se pudo cargar el módulo de dominio")
 
@@ -200,8 +215,8 @@ def _coerce_service_payload(service_payload: Any) -> Any:
     if module is None:
         return service_payload
 
-    for class_name in ("ServicioMenu", "ServicioPersonalExtra"):
-        cls = getattr(module, class_name, None)
+    for nombre_clase in ("ServicioMenu", "ServicioPersonalExtra"):
+        cls = getattr(module, nombre_clase, None)
         if cls is None:
             continue
 
@@ -226,7 +241,7 @@ def _coerce_service_payload(service_payload: Any) -> Any:
     return service_payload
 
 
-def _save_domain_object(repo: Any, obj: Any) -> Any:
+def _guardar_domain_object(repo: Any, obj: Any) -> Any:
     for method_name in (
         "guardar",
         "guardar_orden_servicio",
@@ -240,7 +255,7 @@ def _save_domain_object(repo: Any, obj: Any) -> Any:
     raise RuntimeError("El repositorio no expone un método guardar() para objetos de dominio")
 
 
-def _get_order_from_repo(repo: Any, order_id: Any) -> Any:
+def _get_orden_de_repo(repo: Any, order_id: Any) -> Any:
     for method_name in (
         "obtener",
         "obtener_orden_servicio",
