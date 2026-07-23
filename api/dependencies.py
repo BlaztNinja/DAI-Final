@@ -56,7 +56,7 @@ def _serialize(value: Any) -> Any:
     return str(value)
 
 
-def _call_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
+def _llamar_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
     if repo is None:
         raise RuntimeError("Repositorio no disponible")
 
@@ -72,11 +72,7 @@ def _call_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
 
     if accion == "list":
         return metodo(tabla)
-    return metodo(tabla, args)
-
-
-def _llamar_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
-    return _call_repo(repo, tabla, accion, *args)
+    return metodo(tabla, *args)
 
 
 def _build_order_from_payload(payload: dict[str, Any]) -> Any:

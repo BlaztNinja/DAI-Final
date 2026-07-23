@@ -4,7 +4,7 @@ from typing import Optional
 
 from flask import Blueprint, jsonify, request
 
-from api.dependencies import _call_repo, _get_repository, _serialize
+from api.dependencies import _llamar_repo, _get_repository, _serialize
 
 crud_bp = Blueprint("crud", __name__)
 
@@ -18,26 +18,26 @@ def _build_crud_view(resource_plural: str, resource_singular: str):
         try:
             if request.method == "GET":
                 if resource_id is None:
-                    data = _call_repo(repo, resource_singular, "list")
+                    data = _llamar_repo(repo, resource_singular, "list")
                     return jsonify(_serialize(data)), 200
 
-                data = _call_repo(repo, resource_singular, "get", resource_id)
+                data = _llamar_repo(repo, resource_singular, "get", resource_id)
                 if data is None:
                     return jsonify({"error": "No encontrado"}), 404
                 return jsonify(_serialize(data)), 200
 
             if request.method == "POST":
                 payload = request.get_json(silent=True) or {}
-                data = _call_repo(repo, resource_singular, "create", payload)
+                data = _llamar_repo(repo, resource_singular, "create", payload)
                 return jsonify(_serialize(data)), 201
 
             if request.method == "PUT":
                 payload = request.get_json(silent=True) or {}
-                data = _call_repo(repo, resource_singular, "update", resource_id, payload)
+                data = _llamar_repo(repo, resource_singular, "update", resource_id, payload)
                 return jsonify(_serialize(data)), 200
 
             if request.method == "DELETE":
-                result = _call_repo(repo, resource_singular, "delete", resource_id)
+                result = _llamar_repo(repo, resource_singular, "delete", resource_id)
                 return jsonify({"deleted": bool(result)}), 200
 
             return jsonify({"error": "Método no soportado"}), 405
