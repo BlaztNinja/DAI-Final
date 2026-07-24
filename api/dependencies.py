@@ -52,6 +52,12 @@ def _serialize(value: Any) -> Any:
             if key.startswith("_"):
                 continue
             data[key] = _serialize(item)
+        cls = type(value)
+        for name in dir(cls):
+            if name.startswith("_"):
+                continue
+            if isinstance(getattr(cls, name, None), property):
+                data[name] = _serialize(getattr(value, name))
         return data
     return str(value)
 
