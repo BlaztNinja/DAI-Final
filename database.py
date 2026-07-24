@@ -171,7 +171,7 @@ def crear_tablas():
     
     # ================= SERVICIO CONTRATADO =================
     cursor.execute("""
-    CREATE TABLE IF NOT EXIST servicio_contratado(
+    CREATE TABLE IF NOT EXISTS servicio_contratado(
         servicio_id INTEGER PRIMARY KEY AUTOINCREMENT,
         order_id INTEGER,
         tipo TEXT,

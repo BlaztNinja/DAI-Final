@@ -48,7 +48,7 @@ class Repositorio:
     
     def actualizar(self, tabla:str, id:int, datos: dict) -> dict | None:
         pk = PK_POR_TABLA[tabla] 
-        set_clause = ", ".join([f"{col} = ?"  for col in datos.keys()])
+        set_clause = ", ".join([f"{k} = ?"  for k in datos.keys()])
         valores = tuple(datos.values()) + (id,)
         
         con = obtener_conexion()
