@@ -44,4 +44,27 @@ class Repositorio:
         return dict(tabla, nuevo_id)
     
     def actualizar(self, tabla:str, id:int, datos: dict) -> dict | None:
-        pass
+        pk = PK_POR_TABLA[tabla] 
+        set_clause = ", ".join([f"{col} = ?"  for col in datos.keys()])
+        valores = tuple(datos.values()) + (id,)
+        
+        con = obtener_conexion()
+        con.execute(
+            f"UPDATE {tabla} SET {set_clause} WHERE {pk} = ?", valores
+        )
+        con.commit()
+        con.close()
+        
+        return self.obtener(tabla, id)
+    
+    def eliminar(self, tabla:str, id:int) -> bool:
+        pk = PK_POR_TABLA[tabla]
+        con = obtener_conexion()
+        
+        cursor = con.execute(
+            f"DELETE FROM {tabla} WHERE {pk} = ?", (id,)
+        )
+        con.commit()
+        con.close()
+        
+        return cursor.rowcount > 0
