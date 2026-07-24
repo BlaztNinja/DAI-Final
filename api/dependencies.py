@@ -4,19 +4,19 @@ import importlib
 import inspect
 from typing import Any, Optional
 
-
-def _import_module(module_name: str) -> Optional[Any]:
+#Dinamicamente importa un modulo y retorna None si no se puede importar
+def _import_module(module_name: str) -> Optional[Any]: 
     try:
         return importlib.import_module(module_name)
     except Exception:
         return None
 
-
+#Importa una instancia de repositorio, accediendo a los datos dentro
 def _get_repository() -> Optional[Any]:
     from src.repositorio.repositorio import Repositorio
     return Repositorio()
 
-
+#Busca el modulo de dominio; usado en _build_order_from_payload
 def _get_domain_module() -> Optional[Any]:
     for module_name in ("src.dominio.entities.entities", "src.dominio.entities"):
         module = _import_module(module_name)
@@ -24,7 +24,7 @@ def _get_domain_module() -> Optional[Any]:
             return module
     return None
 
-
+#Busca el modulo de value_objects; usado en _coerce_service_payload
 def _get_value_objects_module() -> Optional[Any]:
     for module_name in ("src.dominio.value_objects.value_objects", "src.dominio.value_objects"):
         module = _import_module(module_name)
@@ -32,7 +32,7 @@ def _get_value_objects_module() -> Optional[Any]:
             return module
     return None
 
-
+#Convierte objetos complejos a estructuras serializables (dict, list, etc.) para jsonify
 def _serialize(value: Any) -> Any:
     if value is None:
         return None
@@ -55,7 +55,7 @@ def _serialize(value: Any) -> Any:
         return data
     return str(value)
 
-
+#Maneja las acciones de CRUD en el repositorio, llamando a los metodos correspondientes
 def _llamar_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
     if repo is None:
         raise RuntimeError("Repositorio no disponible")
@@ -74,7 +74,7 @@ def _llamar_repo(repo: Any, tabla: str, accion: str, *args: Any) -> Any:
         return metodo(tabla)
     return metodo(tabla, *args)
 
-
+#usando OrdenServicio del modulo de dominio, construye un diccionario y retorna una instancia de OrdenServicio
 def _build_order_from_payload(payload: dict[str, Any]) -> Any:
     domain_module = _get_domain_module()
     if domain_module is None:
@@ -101,7 +101,7 @@ def _build_order_from_payload(payload: dict[str, Any]) -> Any:
     except TypeError as exc:
         raise RuntimeError(f"No se pudo crear la orden: {exc}") from exc
 
-
+#Convierte el payload de un servicio a una instancia de su clase correspondiente
 def _coerce_service_payload(service_payload: Any) -> Any:
     module = _get_value_objects_module()
     if module is None:
@@ -132,10 +132,10 @@ def _coerce_service_payload(service_payload: Any) -> Any:
 
     return service_payload
 
-
+#Guarda un objeto de dominio (orden) en el repositorio y retorna la instancia guardada
 def _guardar_domain_object(repo: Any, obj: Any) -> Any:
     return repo.guardar_orden(obj)
 
-
+#Obtiene una orden del repositorio usando su ID
 def _get_orden_de_repo(repo: Any, order_id: Any) -> Any:
     return repo.obtener_orden(order_id)
