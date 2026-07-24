@@ -8,7 +8,8 @@ from api.dependencies import _llamar_repo, _get_repository, _serialize
 
 crud_bp = Blueprint("crud", __name__)
 
-
+#crea una vista CRUD genérica para un recurso específico, manejando GET, POST, PUT y DELETE
+#resource_plural esta por temas de escalabilidad
 def _build_crud_view(resource_plural: str, resource_singular: str):
     def view(resource_id: Optional[str] = None):
         repo = _get_repository()

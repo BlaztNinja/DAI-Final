@@ -132,10 +132,12 @@ def _coerce_service_payload(service_payload: Any) -> Any:
                     inspect.Parameter.KEYWORD_ONLY,
                 ):
                     kwargs[name] = service_payload[name]
-            return cls(**kwargs)
+            instancia = cls(**kwargs)
+            if "cantidad_excedente" in service_payload:
+                instancia.cantidad_excedente = service_payload["cantidad_excedente"]
+            return instancia
         except TypeError:
             continue
-
     return service_payload
 
 #Guarda un objeto de dominio (orden) en el repositorio y retorna la instancia guardada
