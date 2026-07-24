@@ -11,6 +11,7 @@ from api.dependencies import (
     _guardar_domain_object,
     _serialize,
 )
+from src.dominio.entities.entities import revisar_y_aplicar_restriccion
 
 ordenes_bp = Blueprint("ordenes", __name__)
 
@@ -71,9 +72,7 @@ def cargar_servicios(resource_id):
                 orden.cargar_servicio(servicio_obj)
             else:
                 raise RuntimeError("La orden no expone cargar_servicio()")
-
-        if hasattr(orden, "revisar_y_aplicar_restriccion"):
-            orden.revisar_y_aplicar_restriccion(orden)
+        revisar_y_aplicar_restriccion(orden)
 
         saved = _guardar_domain_object(repo, orden)
         return jsonify(_serialize(saved)), 200
