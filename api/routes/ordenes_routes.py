@@ -14,7 +14,7 @@ from api.dependencies import (
 
 ordenes_bp = Blueprint("ordenes", __name__)
 
-
+#Consigue la lista de ordenes de servicio(GET) o crea una nueva orden(POST)
 @ordenes_bp.route("/ordenes-servicio", methods=["GET", "POST"])
 def ordenes_servicio_collection():
     repo = _get_repository()
@@ -34,7 +34,7 @@ def ordenes_servicio_collection():
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
 
-
+#Consigue los detalles de una orden de servicio específica usando el id
 @ordenes_bp.route("/ordenes-servicio/<resource_id>", methods=["GET"])
 def orden_servicio_detail(resource_id):
     repo = _get_repository()
@@ -50,7 +50,7 @@ def orden_servicio_detail(resource_id):
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
 
-
+#agrega un servicio a una orden de servicio específica y aplica restricciones si es necesario (reglas de negocio)
 @ordenes_bp.route("/ordenes-servicio/<resource_id>/servicios", methods=["POST"])
 def cargar_servicios(resource_id):
     repo = _get_repository()
@@ -81,7 +81,7 @@ def cargar_servicios(resource_id):
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
 
-
+#Genera una factura para una orden de servicio específica
 @ordenes_bp.route("/ordenes-servicio/<resource_id>/generar-factura", methods=["POST"])
 def generar_factura(resource_id):
     repo = _get_repository()
@@ -104,7 +104,7 @@ def generar_factura(resource_id):
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
 
-
+#invoca el metodo de la orden para procesar el pago de una orden de servicio específica
 @ordenes_bp.route("/ordenes-servicio/<resource_id>/procesar-pago", methods=["POST"])
 def procesar_pago(resource_id):
     repo = _get_repository()

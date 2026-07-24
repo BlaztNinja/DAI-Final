@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sys
 
+#Bsca el path del proyecto para que los modulos puedan ser importados correctamente
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -12,7 +13,7 @@ from flask import Flask
 from api.routes.crud_routes import crud_bp
 from api.routes.ordenes_routes import ordenes_bp
 
-
+#Instancia el Flask app y registra los blueprints de las rutas
 def crear_app() -> Flask:
     app = Flask(__name__)
     app.config["JSON_SORT_KEYS"] = False
@@ -22,7 +23,7 @@ def crear_app() -> Flask:
 
     return app
 
-
+#Crea la app globalmente
 app = crear_app()
 
 
