@@ -103,8 +103,9 @@ def crear_tablas():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS empleado(
         empleado_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
+        nombre_completo TEXT,
         cargo TEXT,
+        email TEXT,
         telefono TEXT
     )
     """)
@@ -165,6 +166,19 @@ def crear_tablas():
         cliente_firma TEXT,
         fecha TEXT,
         FOREIGN KEY(orden_id) REFERENCES orden_servicio(orden_id)
+    )
+    """)
+    
+    # ================= SERVICIO CONTRATADO =================
+    cursor.execute("""
+    CREATE TABLE IF NOT EXIST servicio_contratado(
+        servicio_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER,
+        tipo TEXT,
+        codigo TEXT,
+        cantidad_excedente REAL,
+        ordenes_en_espera INTEGER,
+        FOREIGN KEY(order_id) REFERENCES orden_servicio(orden_id)
     )
     """)
 
