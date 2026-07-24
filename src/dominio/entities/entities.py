@@ -1,4 +1,4 @@
-from value_objects.value_objects import ServicioContratado, ServicioPersonalExtra, Pago, factura
+from src.dominio.value_objects.value_objects import ServicioContratado, ServicioPersonalExtra, Pago, factura
 from datetime import date, datetime
 
 class Empleado:

@@ -173,12 +173,12 @@ def crear_tablas():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS servicio_contratado(
         servicio_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id INTEGER,
+        orden_id INTEGER,
         tipo TEXT,
         codigo TEXT,
         cantidad_excedente REAL,
         ordenes_en_espera INTEGER,
-        FOREIGN KEY(order_id) REFERENCES orden_servicio(orden_id)
+        FOREIGN KEY(orden_id) REFERENCES orden_servicio(orden_id)
     )
     """)
 

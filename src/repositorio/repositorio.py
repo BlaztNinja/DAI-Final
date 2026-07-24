@@ -33,18 +33,25 @@ class Repositorio:
         con.close()
         return dict(fila) if fila else None
     
-    def crear(self, tabla:str, id:int, datos:dict):
+    def crear(self, tabla:str, datos:dict):
+        if not isinstance(datos, dict):
+            raise TypeError("Los datos deben enviarse como un diccionario")
+
         columnas = ", ".join(datos.keys())
         placeholders = ", ".join(["?"]*len(datos))
         valores = tuple(datos.values())
         con = obtener_conexion()
         cursor = con.execute(
-            f"INSERT INTO {tabla} ({columnas}) VALUES ({placeholders})", (valores)
+            f"INSERT INTO {tabla} ({columnas}) VALUES ({placeholders})", valores
         )
         con.commit()
         nuevo_id = cursor.lastrowid
         con.close()
-        return dict(tabla, nuevo_id)
+
+        if nuevo_id is None:
+            return {"insertado": True}
+
+        return self.obtener(tabla, nuevo_id)
     
     def actualizar(self, tabla:str, id:int, datos: dict) -> dict | None:
         pk = PK_POR_TABLA[tabla] 

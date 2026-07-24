@@ -57,13 +57,16 @@ for plural, singular in [
     ("items-menu", "item_menu"),
     ("empleados", "empleado"),
 ]:
+    endpoint_prefix = plural.replace("-", "_")
     crud_bp.add_url_rule(
         f"/{plural}",
         view_func=_build_crud_view(plural, singular),
+        endpoint=f"{endpoint_prefix}_list_create",
         methods=["GET", "POST"],
     )
     crud_bp.add_url_rule(
         f"/{plural}/<resource_id>",
         view_func=_build_crud_view(plural, singular),
+        endpoint=f"{endpoint_prefix}_detail",
         methods=["GET", "PUT", "DELETE"],
     )
